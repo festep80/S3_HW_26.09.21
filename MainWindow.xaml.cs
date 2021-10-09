@@ -45,8 +45,8 @@ namespace S3_HW_26._09._21
             {
                 if(item is ProgressBar)
                 {
-                    TimerCallback tm = new TimerCallback(RandomValue);
-                    Timer timer = new Timer(tm, item, 0, 1000);
+                    Thread myThread = new Thread(new ParameterizedThreadStart(SetPB));
+                    myThread.Start(item);
                 }
             }
 
@@ -54,6 +54,11 @@ namespace S3_HW_26._09._21
             Grid.SetColumnSpan(dancePB, 3);
             MainGrid.Children.Add(dancePB);                    
             
+        }
+        public void SetPB(object obj)
+        {
+            TimerCallback tm = new TimerCallback(RandomValue);
+            Timer timer = new Timer(tm, obj, 0, 1000);
         }
 
         public static void RandomValue(object obj)
