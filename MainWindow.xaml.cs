@@ -41,32 +41,29 @@ namespace S3_HW_26._09._21
                 dancePB.Children.Add(pb);
             }
 
+            Grid.SetRow(dancePB, 1);
+            Grid.SetColumnSpan(dancePB, 3);
+            MainGrid.Children.Add(dancePB);
+
             foreach (var item in dancePB.Children)
             {
                 if(item is ProgressBar)
                 {
-                    Thread myThread = new Thread(new ParameterizedThreadStart(SetPB));
-                    myThread.Start(item);
+                    TimerCallback tm = new TimerCallback(RandomValue);
+                    Timer timer = new Timer(tm, item, 0, 1000);
                 }
-            }
-
-            Grid.SetRow(dancePB, 1);
-            Grid.SetColumnSpan(dancePB, 3);
-            MainGrid.Children.Add(dancePB);                    
+            }                 
             
-        }
-        public void SetPB(object obj)
-        {
-            TimerCallback tm = new TimerCallback(RandomValue);
-            Timer timer = new Timer(tm, obj, 0, 1000);
-        }
-
+        }       
         public static void RandomValue(object obj)
-        {
-            Random rnd = new Random();
-            SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(255, (byte)rnd.Next(256), (byte)rnd.Next(256), (byte)rnd.Next(256)));
-            (obj as ProgressBar).Background = brush;
-            (obj as ProgressBar).Value = rnd.Next(0, 100);
+        {            
+            (obj as ProgressBar).Dispatcher.Invoke(() =>
+            {
+                Random rnd = new Random();
+                SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(255, (byte)rnd.Next(255), (byte)rnd.Next(255), (byte)rnd.Next(255)));
+                (obj as ProgressBar).Background = brush;
+                (obj as ProgressBar).Value = rnd.Next(0, 100);
+            });
         }      
     }
 }
